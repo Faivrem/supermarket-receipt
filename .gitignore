@@ -48,3 +48,9 @@ buildNumber.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+
+# intelij #
+######################
+*.idea
+*.iml
