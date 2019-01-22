@@ -28,7 +28,7 @@ public class SupermarketTest {
 
         Teller teller = new Teller(catalog);
         // Ajout de l'offre sur la brosse à dents au catalogue
-        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, toothbrush, 10.0);
+        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, toothbrush,0);
 
         Receipt receipt = teller.checksOutArticlesFrom(cart);
 
@@ -37,6 +37,7 @@ public class SupermarketTest {
         assertEquals(expectedTotalPrice,totalPrice,"2.5kg de pommes à 1.99€ avec réduction sur les brosses à dents");
 
     }
+
 
 
 }
