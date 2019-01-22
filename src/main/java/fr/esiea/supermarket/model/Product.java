@@ -20,6 +20,8 @@ public class Product {
         return unit;
     }
 
+    /*
+    Code MORT
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -28,6 +30,7 @@ public class Product {
         return Objects.equals(name, product.name) &&
             unit == product.unit;
     }
+    */
 
     @Override
     public int hashCode() {

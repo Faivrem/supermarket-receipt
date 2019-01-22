@@ -31,6 +31,8 @@ public class ReceiptItem {
         return totalPrice;
     }
 
+    /*
+    CODE MORT
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -44,9 +46,7 @@ public class ReceiptItem {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(product, price, totalPrice, quantity);
     }
-
-
+    */
 }
