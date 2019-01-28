@@ -134,5 +134,27 @@ public class SupermarketTest {
 
     }
 
+    @Test
+    public void testNoDiscount() {
+
+        SupermarketCatalog catalog = new FakeCatalog();
+
+        Product toothbrush = new Product("toothbrush", ProductUnit.Each);
+        catalog.addProduct(toothbrush, 0.99);
+
+        ShoppingCart cart = new ShoppingCart();
+        cart.addItemQuantity(toothbrush, 3.0);
+
+        Teller teller = new Teller(catalog);
+
+        Receipt receipt = teller.checksOutArticlesFrom(cart);
+
+        double expectedTotalPrice = 0.99 * 3;
+        double totalPrice = receipt.getTotalPrice();
+
+        Assertions.assertThat(totalPrice).isEqualTo(expectedTotalPrice).as("Test No discount");
+
+    }
+
 
 }
