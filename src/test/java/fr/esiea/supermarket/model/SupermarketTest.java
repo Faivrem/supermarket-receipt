@@ -40,8 +40,6 @@ public class SupermarketTest {
 
 
     }
-    // ThreeForTwo, TenPercentDiscount, TwoForAmount, FiveForAmount
-
 
     @Test
     public void testTenPercentDiscount() {
@@ -153,6 +151,43 @@ public class SupermarketTest {
         double totalPrice = receipt.getTotalPrice();
 
         Assertions.assertThat(totalPrice).isEqualTo(expectedTotalPrice).as("Test No discount");
+
+    }
+
+    @Test
+    public void testDiscountsNotUsed() {
+
+        SupermarketCatalog catalog = new FakeCatalog();
+
+        Product toothpaste = new Product("toothpaste", ProductUnit.Each);
+        catalog.addProduct(toothpaste,1.79);
+
+        Product rice = new Product("rice",ProductUnit.Each);
+        catalog.addProduct(rice, 2.49);
+
+        Product toothbrush = new Product("toothbrush", ProductUnit.Each);
+        catalog.addProduct(toothbrush, 0.99);
+
+        Product tomatoesBox = new Product("tomatoes Box", ProductUnit.Each);
+        catalog.addProduct(tomatoesBox,0.99);
+
+        ShoppingCart cart = new ShoppingCart();
+        cart.addItemQuantity(toothpaste, 3.0);
+        cart.addItemQuantity(toothbrush, 1.0);
+        cart.addItemQuantity(tomatoesBox, 1.0);
+
+        Teller teller = new Teller(catalog);
+        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, rice,10);
+        teller.addSpecialOffer(SpecialOfferType.ThreeForTwo, toothbrush,0);
+        teller.addSpecialOffer(SpecialOfferType.TwoForAmount, tomatoesBox,0.99);
+        teller.addSpecialOffer(SpecialOfferType.FiveForAmount, toothpaste,7.49);
+
+        Receipt receipt = teller.checksOutArticlesFrom(cart);
+
+        double expectedTotalPrice = 7.3500000000000005;
+        double totalPrice = receipt.getTotalPrice();
+
+        Assertions.assertThat(totalPrice).isEqualTo(expectedTotalPrice).as("Create all offers but any is used");
 
     }
 
