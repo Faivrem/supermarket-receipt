@@ -1,7 +1,10 @@
 package fr.esiea.supermarket.model;
 
+import fr.esiea.supermarket.model.offers.SpecialOfferType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.text.DecimalFormat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,7 +32,7 @@ public class SupermarketTest {
 
         Teller teller = new Teller(catalog);
         // Ajout de l'offre sur la brosse à dents au catalogue
-        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, toothbrush,10);
+        teller.addSpecialOffer(SpecialOfferType.XPercentDiscount, toothbrush,10);
 
         Receipt receipt = teller.checksOutArticlesFrom(cart);
 
@@ -53,7 +56,7 @@ public class SupermarketTest {
         cart.addItem(rice);
 
         Teller teller = new Teller(catalog);
-        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, rice,10);
+        teller.addSpecialOffer(SpecialOfferType.XPercentDiscount, rice,10);
 
         Receipt receipt = teller.checksOutArticlesFrom(cart);
 
@@ -177,7 +180,7 @@ public class SupermarketTest {
         cart.addItemQuantity(tomatoesBox, 1.0);
 
         Teller teller = new Teller(catalog);
-        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, rice,10);
+        teller.addSpecialOffer(SpecialOfferType.XPercentDiscount, rice,10);
         teller.addSpecialOffer(SpecialOfferType.ThreeForTwo, toothbrush,0);
         teller.addSpecialOffer(SpecialOfferType.TwoForAmount, tomatoesBox,0.99);
         teller.addSpecialOffer(SpecialOfferType.FiveForAmount, toothpaste,7.49);
@@ -186,7 +189,6 @@ public class SupermarketTest {
 
         double expectedTotalPrice = 7.3500000000000005;
         double totalPrice = receipt.getTotalPrice();
-
         Assertions.assertThat(totalPrice).isEqualTo(expectedTotalPrice).as("Create all offers but any is used");
 
     }
