@@ -4,11 +4,10 @@ import fr.esiea.supermarket.model.Discount;
 import fr.esiea.supermarket.model.Product;
 
 import java.util.List;
+import java.util.Map;
 
-public interface Offer {
-
-    Discount getDiscount(Product p, double quantity, double unitPrice);
-
+public interface BundleOffer {
 
 
+    Discount getDiscount(Map<Product, Double> productQuantities, Map<Product, Double> productUnitPrices);
 }

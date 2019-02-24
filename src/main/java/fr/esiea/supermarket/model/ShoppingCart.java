@@ -1,5 +1,6 @@
 package fr.esiea.supermarket.model;
 
+import fr.esiea.supermarket.model.offers.BundleOffer;
 import fr.esiea.supermarket.model.offers.Offer;
 
 import java.util.ArrayList;
@@ -35,13 +36,13 @@ public class ShoppingCart {
     }
 
     void handleOffers(Receipt receipt, Map<Product, Offer> offers, SupermarketCatalog catalog) {
-        for (Product p: productQuantities().keySet()) {
+        for (Product p : productQuantities().keySet()) {
             double quantity = productQuantities.get(p);
-            if (offers.containsKey(p)) {
+            if (offers.containsKey(p)) {// si l'offre contient
                 Offer offer = offers.get(p);
                 double unitPrice = catalog.getUnitPrice(p);
 
-                Discount discount = offer.getDiscount(p,quantity,unitPrice);
+                Discount discount = offer.getDiscount(p, quantity, unitPrice);
 
                 if (discount != null)
                     receipt.addDiscount(discount);
@@ -50,4 +51,46 @@ public class ShoppingCart {
 
         }
     }
+
+    void handleBundleOffers(Receipt receipt, Map<BundleOffer, List<Product>> offers, SupermarketCatalog catalog) {
+        System.out.println("BUNDLE OFFERS");
+        Map<Product, Double> pQuantities = new HashMap<>();
+        Map<Product, Double> pUnitPrices = new HashMap<>();
+
+        // On regarde chacune des offres groupées
+        for (BundleOffer o : offers.keySet()) {
+            int productInOffer = 0;
+            pQuantities.clear();
+            pUnitPrices.clear();
+
+            //On regarde dans notre panier
+            for (Product p : productQuantities().keySet()) {
+                System.out.println(p);
+                // Si le produit appartient à une offre groupée
+                System.out.println(offers.values());
+                if (offers.values().contains(p)) {
+                    System.out.println("Contains " + p);
+                    productInOffer++;
+
+                    //On recupère ses infos
+                    double quantity = productQuantities.get(p);
+                    double unitPrice = catalog.getUnitPrice(p);
+                    //Il faut le stocker
+                    pQuantities.put(p, quantity);
+                    pUnitPrices.put(p, unitPrice);
+                }
+            }
+
+            // Si on a autant de produit que dans l'offre
+            //On fait le discount dessus
+            if (productInOffer == offers.values().size()) {
+                //on envoie le discount
+                Discount discount = o.getDiscount(pQuantities, pUnitPrices);
+
+                if (discount != null)
+                    receipt.addDiscount(discount);
+            }
+        }
+    }
+
 }

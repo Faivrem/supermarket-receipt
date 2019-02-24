@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -132,6 +133,37 @@ public class SupermarketTest {
         double totalPrice = receipt.getTotalPrice();
 
         Assertions.assertThat(totalPrice).isEqualTo(expectedTotalPrice).as("Test Five For Amount");
+
+    }
+
+    @Test
+    public void testBundle()
+    {
+
+        SupermarketCatalog catalog = new FakeCatalog();
+
+        Product toothpaste = new Product("toothpaste", ProductUnit.Each);
+        catalog.addProduct(toothpaste,1.79);
+
+        Product toothbrush = new Product("toothbrush", ProductUnit.Each);
+        catalog.addProduct(toothbrush, 0.99);
+
+        ShoppingCart cart = new ShoppingCart();
+        cart.addItemQuantity(toothpaste, 1.0);
+        cart.addItemQuantity(toothbrush, 1.0);
+
+        Teller teller = new Teller(catalog);
+        ArrayList<Product> products = new ArrayList<Product>();
+        products.add(toothpaste);
+        products.add(toothbrush);
+
+        teller.addSpecialBundleOffer(SpecialOfferType.BundlePercent, products,10);
+
+        Receipt receipt = teller.checksOutArticlesFrom(cart);
+
+        double expectedTotalPrice = 2.502;
+        double totalPrice = receipt.getTotalPrice();
+        Assertions.assertThat(totalPrice).isEqualTo(expectedTotalPrice).as("Bundle offer");
 
     }
 
