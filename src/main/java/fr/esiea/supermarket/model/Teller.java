@@ -11,6 +11,7 @@ public class Teller {
 
     private final SupermarketCatalog catalog;
     private Map<Product, Offer> offers = new HashMap<>();
+    private Map<BundleOffer, HashMap<Product, Double>> bundleOffers = new HashMap<>();
 
     public Teller(SupermarketCatalog catalog) {
         this.catalog = catalog;
@@ -34,6 +35,16 @@ public class Teller {
 
     }
 
+    public void addSpecialBundleOffer(SpecialOfferType offerType, HashMap<Product, Double> products, double argument) {
+
+        switch (offerType) {
+            case BundlePercentDiscount:
+                this.bundleOffers.put(new BundlePercentOffer(products, argument), products);
+                break;
+        }
+
+    }
+
     public Receipt checksOutArticlesFrom(ShoppingCart theCart) {
         Receipt receipt = new Receipt();
         List<ProductQuantity> productQuantities = theCart.getItems();
@@ -44,10 +55,18 @@ public class Teller {
             double price = quantity * unitPrice;
             receipt.addProduct(p, quantity, unitPrice, price);
         }
-        theCart.handleOffers(receipt, this.offers, this.catalog);
+
+        if (!this.bundleOffers.isEmpty()) {
+            theCart.handleBundleOffers(receipt, this.bundleOffers, this.catalog);
+        }
+        if (!this.offers.isEmpty()) {
+            theCart.handleOffers(receipt, this.offers, this.catalog);
+        }
 
         return receipt;
     }
+
+
 }
 
 
