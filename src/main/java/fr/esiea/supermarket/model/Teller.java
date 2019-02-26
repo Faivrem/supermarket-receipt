@@ -3,6 +3,7 @@ package fr.esiea.supermarket.model;
 
 import fr.esiea.supermarket.model.offers.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ public class Teller {
 
     private final SupermarketCatalog catalog;
     private Map<Product, Offer> offers = new HashMap<>();
+    private List<BundleOffer> bundleOffers = new ArrayList<>();
 
     public Teller(SupermarketCatalog catalog) {
         this.catalog = catalog;
@@ -34,6 +36,16 @@ public class Teller {
 
     }
 
+    public void addSpecialBundleOffer(SpecialOfferType offerType, Map<Product, Double> productQuantities, double argument) {
+
+        switch (offerType) {
+            case BundlePercentDiscount:
+                this.bundleOffers.add(new BundlePercentOffer(productQuantities, argument));
+                break;
+        }
+
+    }
+
     public Receipt checksOutArticlesFrom(ShoppingCart theCart) {
         Receipt receipt = new Receipt();
         List<ProductQuantity> productQuantities = theCart.getItems();
@@ -44,10 +56,18 @@ public class Teller {
             double price = quantity * unitPrice;
             receipt.addProduct(p, quantity, unitPrice, price);
         }
-        theCart.handleOffers(receipt, this.offers, this.catalog);
+
+        if (!this.bundleOffers.isEmpty()) {
+            theCart.handleBundleOffers(receipt, this.bundleOffers, this.catalog);
+        }
+        if (!this.offers.isEmpty()) {
+            theCart.handleOffers(receipt, this.offers, this.catalog);
+        }
 
         return receipt;
     }
+
+
 }
 
 

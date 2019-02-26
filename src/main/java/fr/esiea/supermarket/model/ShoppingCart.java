@@ -1,5 +1,6 @@
 package fr.esiea.supermarket.model;
 
+import fr.esiea.supermarket.model.offers.BundleOffer;
 import fr.esiea.supermarket.model.offers.Offer;
 
 import java.util.ArrayList;
@@ -11,7 +12,6 @@ public class ShoppingCart {
 
     private final List<ProductQuantity> items = new ArrayList<>();
     Map<Product, Double> productQuantities = new HashMap<>();
-
 
     List<ProductQuantity> getItems() {
         return new ArrayList<>(items);
@@ -34,7 +34,7 @@ public class ShoppingCart {
         }
     }
 
-    void handleOffers(Receipt receipt, Map<Product, Offer> offers, SupermarketCatalog catalog) {
+    public void handleOffers(Receipt receipt, Map<Product, Offer> offers, SupermarketCatalog catalog) {
         for (Product p: productQuantities().keySet()) {
             double quantity = productQuantities.get(p);
             if (offers.containsKey(p)) {
@@ -50,4 +50,37 @@ public class ShoppingCart {
 
         }
     }
+
+    public void handleBundleOffers(Receipt receipt, List<BundleOffer> bundleOffers, SupermarketCatalog catalog) {
+
+        // Toutes les offres
+        for (BundleOffer bo : bundleOffers) {
+            // Récupère les items du cart
+            Map<Product, Double> copyOfItems = productQuantities();
+            // Récupère les produits dans l'offre
+            Map<Product, Double> bundleProductQuantities = bo.getProductQuantities();
+
+            for (Product p : bundleProductQuantities.keySet()) {
+
+                if (!copyOfItems.containsKey(p)) {
+                    copyOfItems.remove(p);
+                }
+            }
+
+            // Il ne reste plus que les produits en promo
+            if (copyOfItems.size() == bundleProductQuantities.size()) {
+
+                List<Discount> discounts = bo.getDiscount(copyOfItems,catalog);
+
+                if (!discounts.isEmpty()) {
+                    for (Discount d : discounts) {
+                        receipt.addDiscount(d);
+                    }
+                }
+
+            }
+        }
+    }
+
+
 }
