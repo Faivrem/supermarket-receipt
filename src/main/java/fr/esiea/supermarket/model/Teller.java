@@ -3,6 +3,7 @@ package fr.esiea.supermarket.model;
 
 import fr.esiea.supermarket.model.offers.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,7 @@ public class Teller {
 
     private final SupermarketCatalog catalog;
     private Map<Product, Offer> offers = new HashMap<>();
-    private Map<BundleOffer, HashMap<Product, Double>> bundleOffers = new HashMap<>();
+    private List<BundleOffer> bundleOffers = new ArrayList<>();
 
     public Teller(SupermarketCatalog catalog) {
         this.catalog = catalog;
@@ -35,11 +36,11 @@ public class Teller {
 
     }
 
-    public void addSpecialBundleOffer(SpecialOfferType offerType, HashMap<Product, Double> products, double argument) {
+    public void addSpecialBundleOffer(SpecialOfferType offerType, Map<Product, Double> productQuantities, double argument) {
 
         switch (offerType) {
             case BundlePercentDiscount:
-                this.bundleOffers.put(new BundlePercentOffer(products, argument), products);
+                this.bundleOffers.add(new BundlePercentOffer(productQuantities, argument));
                 break;
         }
 

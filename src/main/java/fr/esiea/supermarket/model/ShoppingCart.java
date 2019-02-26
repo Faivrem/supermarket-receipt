@@ -51,50 +51,36 @@ public class ShoppingCart {
         }
     }
 
-    public void handleBundleOffers(Receipt receipt, Map<BundleOffer, HashMap<Product, Double>> bundleOffers, SupermarketCatalog catalog) {
+    public void handleBundleOffers(Receipt receipt, List<BundleOffer> bundleOffers, SupermarketCatalog catalog) {
 
-        Map<Product, Double> tempProductQuantities = new HashMap<>();
-        Map<Product, Double> tempProductUnitPrices = new HashMap<>();
+        // Toutes les offres
+        for (BundleOffer bo : bundleOffers) {
+            // Récupère les items du cart
+            Map<Product, Double> copyOfItems = productQuantities();
+            // Récupère les produits dans l'offre
+            Map<Product, Double> bundleProductQuantities = bo.getProductQuantities();
 
-        // Pour chaque bundle offer
-        for(BundleOffer bo : bundleOffers.keySet()) {
+            for (Product p : bundleProductQuantities.keySet()) {
 
-            // On récupère l'offre (produits et leurs quantités dans l'offre)
-            Map<Product, Double> pOfferQuantities = bundleOffers.get(bo);
-
-            // On vide les HashMap de stockage des infos produits temporaires
-            tempProductQuantities.clear();
-            tempProductUnitPrices.clear();
-
-            // On parcourt notre panier
-            for (Product p: productQuantities().keySet()) {
-
-                //Si le produit est compris dans l'offre
-                if (pOfferQuantities.containsKey(p)) {
-
-                    double quantity = productQuantities.get(p);
-                    double unitPrice = catalog.getUnitPrice(p);
-
-                    // On stocke temporairement les infos sur le produits
-                    tempProductQuantities.put(p,quantity);
-                    tempProductUnitPrices.put(p,unitPrice);
-
+                if (!copyOfItems.containsKey(p)) {
+                    copyOfItems.remove(p);
                 }
             }
 
-            // L'offre est respecté
-            if (pOfferQuantities.size() == tempProductQuantities.size() && pOfferQuantities.size() == tempProductUnitPrices.size()) {
+            // Il ne reste plus que les produits en promo
+            if (copyOfItems.size() == bundleProductQuantities.size()) {
 
-                Discount discount = null;
+                List<Discount> discounts = bo.getDiscount(copyOfItems,catalog);
 
-                discount = bo.getDiscount(tempProductQuantities,tempProductUnitPrices);
-
-                if (discount != null)
-                    receipt.addDiscount(discount);
+                if (!discounts.isEmpty()) {
+                    for (Discount d : discounts) {
+                        receipt.addDiscount(d);
+                    }
+                }
 
             }
-
         }
-
     }
+
+
 }

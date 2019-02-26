@@ -5,7 +5,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -209,7 +212,8 @@ public class SupermarketTest {
         cart.addItemQuantity(toothpaste, 1.0);
         cart.addItemQuantity(toothbrush, 1.0);
 
-        HashMap<Product,Double> bundleProductQuantities = new HashMap<>();
+        // On met produits dans l'offre groupée
+        Map<Product,Double> bundleProductQuantities = new HashMap<>();
         bundleProductQuantities.put(toothpaste,1.0);
         bundleProductQuantities.put(toothbrush,1.0);
 
@@ -219,6 +223,8 @@ public class SupermarketTest {
         Receipt receipt = teller.checksOutArticlesFrom(cart);
 
         double expectedTotalPrice = (1.79 + 0.99) - (1.79 + 0.99) * 0.1;
+        //expectedTotalPrice = 2*(1.79 + 0.99) - 2*((1.79 + 0.99) * 0.1);
+
         double totalPrice = receipt.getTotalPrice();
         Assertions.assertThat(totalPrice).isEqualTo(expectedTotalPrice).as("Test of bundle offers");
     }
