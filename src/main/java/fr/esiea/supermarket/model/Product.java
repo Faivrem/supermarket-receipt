@@ -5,6 +5,15 @@ import java.util.Objects;
 public class Product {
     private final String name;
     private final ProductUnit unit;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Product(String name, ProductUnit unit) {
         this.name = name;
