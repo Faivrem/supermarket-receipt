@@ -44,7 +44,7 @@ public class BundlePercentOffer implements BundleOffer {
                 numberOfTime = numberOfXs;
             }
 
-            //System.out.println("Number of time : " + numberOfTime);
+            System.out.println("Number of time : " + numberOfTime);
         }
 
         // Calcul du prix total 1 x fois l'offre
@@ -53,15 +53,15 @@ public class BundlePercentOffer implements BundleOffer {
             double quantity = this.productQuantities.get(p);
             double unitPrice = catalog.getUnitPrice(p);
 
-            //System.out.println(p + " -> quantity : " + quantity);
-            //System.out.println(p + " -> unitPrice : " + unitPrice);
+            System.out.println(p + " -> quantity : " + quantity);
+            System.out.println(p + " -> unitPrice : " + unitPrice);
 
             totalPrice += unitPrice * quantity;
         }
         // Application de l'offre sur le prix
         discountAmount = totalPrice * argument/100;
-        //System.out.println("Total Price : " + totalPrice);
-        //System.out.println("Total Price : " + discountAmount);
+        System.out.println("Total Price : " + totalPrice);
+        System.out.println("Total Price : " + discountAmount);
 
 
         //Nombre de fois qu'on applique cette réduction

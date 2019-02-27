@@ -60,9 +60,9 @@ public class ShoppingCart {
             // Récupère les produits dans l'offre
             Map<Product, Double> bundleProductQuantities = bo.getProductQuantities();
 
-            for (Product p : bundleProductQuantities.keySet()) {
+            for (Product p : copyOfItems.keySet()) {
 
-                if (!copyOfItems.containsKey(p)) {
+                if (!bundleProductQuantities.containsKey(p)) {
                     copyOfItems.remove(p);
                 }
             }
